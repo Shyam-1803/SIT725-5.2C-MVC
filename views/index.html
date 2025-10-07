@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIT725 - MVC Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .mvc-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .mvc-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .mvc-info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mvc-info li {
+            padding: 5px 0;
+            color: #555;
+        }
+
+        .mvc-info li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .calculator {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input, select {
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            flex: 1;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .operation-select {
+            flex: 2;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.3em;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-success {
+            color: #28a745;
+            border-color: #28a745;
+        }
+
+        .result-error {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .history-section {
+            margin-top: 30px;
+        }
+
+        .history-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            margin-bottom: 15px;
+        }
+
+        #history {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        #history h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        #history ul {
+            list-style: none;
+        }
+
+        #history li {
+            padding: 10px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 MVC Calculator</h1>
+        <p class="subtitle">SIT725 Task 5.2C - Using MVC Strategy</p>
+
+        <div class="mvc-info">
+            <h3>📐 MVC Architecture Active</h3>
+            <ul>
+                <li><strong>Model:</strong> calculatorModel.js - Business Logic</li>
+                <li><strong>View:</strong> index.html - User Interface</li>
+                <li><strong>Controller:</strong> calculatorController.js - Request Handler</li>
+                <li><strong>Routes:</strong> calculatorRoutes.js - URL Mapping</li>
+            </ul>
+        </div>
+
+        <div class="calculator">
+            <h2>Perform Calculation</h2>
+            
+            <div class="input-group">
+                <div class="input-row">
+                    <input type="number" id="num1" placeholder="First number" step="any" required>
+                </div>
+                
+                <div class="input-row">
+                    <select id="operation" class="operation-select">
+                        <option value="add">➕ Addition (+)</option>
+                        <option value="subtract">➖ Subtraction (−)</option>
+                        <option value="multiply">✖️ Multiplication (×)</option>
+                        <option value="divide">➗ Division (÷)</option>
+                    </select>
+                </div>
+                
+                <div class="input-row">
+                    <input type="number" id="num2" placeholder="Second number" step="any" required>
+                </div>
+            </div>
+
+            <button onclick="calculate()">Calculate</button>
+
+            <div id="result"></div>
+        </div>
+
+        <div class="history-section">
+            <button class="history-btn" onclick="loadHistory()">📜 View Calculation History</button>
+            <div id="history"></div>
+        </div>
+
+        <div class="footer">
+            <p>Created by Shyam Kumar | SIT725 © 2025</p>
+            <p>MVC Architecture Pattern Implementation</p>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * VIEW LAYER JavaScript
+         * 
+         * This code handles:
+         * - User interactions
+         * - Sending requests to Controller (via API)
+         * - Displaying responses to user
+         * 
+         * It does NOT:
+         * - Perform calculations (that's Model's job)
+         * - Handle business logic
+         */
+
+        // Calculate function - sends request to Controller
+        async function calculate() {
+            const num1 = document.getElementById('num1').value;
+            const num2 = document.getElementById('num2').value;
+            const operation = document.getElementById('operation').value;
+            const resultDiv = document.getElementById('result');
+
+            // Validate inputs on client side
+            if (!num1 || !num2) {
+                resultDiv.innerHTML = '⚠️ Please enter both numbers';
+                resultDiv.className = 'result-error';
+                return;
+            }
+
+            // Show loading state
+            resultDiv.innerHTML = '⏳ Calculating...';
+            resultDiv.className = '';
+
+            try {
+                // Send POST request to Controller
+                const response = await fetch('/api/calculator/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        num1: num1, 
+                        num2: num2, 
+                        operation: operation 
+                    })
+                });
+
+                const data = await response.json();
+
+                // Display result based on response
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        ✅ <strong>Result:</strong><br>
+                        ${data.num1} ${getOperationSymbol(data.operation)} ${data.num2} = 
+                        <span style="font-size: 1.2em; color: #667eea;">${data.result}</span>
+                    `;
+                    resultDiv.className = 'result-success';
+                } else {
+                    resultDiv.innerHTML = `❌ <strong>Error:</strong> ${data.error}`;
+                    resultDiv.className = 'result-error';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `❌ <strong>Error:</strong> ${error.message}`;
+                resultDiv.className = 'result-error';
+            }
+        }
+
+        // Get operation symbol for display
+        function getOperationSymbol(operation) {
+            const symbols = {
+                'add': '+',
+                'subtract': '−',
+                'multiply': '×',
+                'divide': '÷'
+            };
+            return symbols[operation] || operation;
+        }
+
+        // Load calculation history
+        async function loadHistory() {
+            const historyDiv = document.getElementById('history');
+            
+            // Toggle visibility
+            if (historyDiv.style.display === 'block') {
+                historyDiv.style.display = 'none';
+                return;
+            }
+
+            historyDiv.innerHTML = '⏳ Loading history...';
+            historyDiv.style.display = 'block';
+
+            try {
+                // Send GET request to Controller
+                const response = await fetch('/api/calculator/history');
+                const data = await response.json();
+
+                if (data.success && data.history.length > 0) {
+                    let html = '<h3>📊 Recent Calculations (' + data.count + '):</h3><ul>';
+                    data.history.forEach(item => {
+                        html += `
+                            <li>
+                                <strong>${item.num1} ${getOperationSymbol(item.operation)} ${item.num2} = ${item.result}</strong>
+                            </li>
+                        `;
+                    });
+                    html += '</ul>';
+                    historyDiv.innerHTML = html;
+                } else {
+                    historyDiv.innerHTML = '<p>No calculation history available.</p>';
+                }
+            } catch (error) {
+                historyDiv.innerHTML = `<p style="color: #dc3545;">❌ Error loading history: ${error.message}</p>`;
+            }
+        }
+
+        // Allow Enter key to calculate
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('num1').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculate();
+            });
+            document.getElementById('num2').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculate();
+            });
+        });
+    </script>
+</body>
+</html>

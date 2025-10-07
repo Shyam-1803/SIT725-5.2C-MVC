@@ -1,0 +1,19 @@
+{
+    "name": "sit725-5.2c-mvc",
+    "version": "1.0.0",
+    "description": "MVC Architecture assignment for SIT725",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js",
+      "dev": "nodemon server.js"
+    },
+    "keywords": ["mvc", "express", "nodejs", "architecture"],
+    "author": "Shyam Kumar",
+    "license": "ISC",
+    "dependencies": {
+      "express": "^4.18.2"
+    },
+    "devDependencies": {
+      "nodemon": "^3.0.1"
+    }
+  }
